@@ -6,12 +6,22 @@ const formValidation = {}  // Сюда пишутся статусы валид�
 // Объявляется и инициализируется константная переменная
 // Инициализация функцией, заданной в стрелочном виде
 export const validatePassword = (e) => {
-  formValidation.password = e.target.value
+  //formValidation.password = e.target.value
   console.log("Password validation...")
   console.log(e)
   // Напишите код валидации здесь и присвойте true/false в объект(словарь) formValidation
   // formValidation.password = ...  // formValidation['password'] = ... - то же самое, но другой синтаксис
-  return formValidation.password !== undefined   // Это заглушка, return вероятно надо переписать
+  //return formValidation.password !== undefined   // Это заглушка, return вероятно надо переписать
+  return ((String(e).length>=6)&&(String(e).length<13))
+
+}
+
+export const validateRepeatedPassword = (e) => {
+  const password = formValues['password']
+  if(String(e)==String(password))
+    return true
+  else
+    return false;
 }
 
 
@@ -41,6 +51,7 @@ export const setFormValue = (valueKey, newValue, validator) => {
   if (validator !== undefined) {
     formValidation[valueKey] = validator(newValue)
   }
+  return !!formValidation[valueKey]
 }
 
 

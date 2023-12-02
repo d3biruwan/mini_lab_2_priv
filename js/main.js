@@ -1,13 +1,14 @@
-import {setFormValue, submitSignUpForm, validateEmail, validatePassword} from "./utils.js"
+import {setFormValue, submitSignUpForm, validateEmail, validatePassword, validateRepeatedPassword} from "./utils.js"
 
 
 ////// ДЕМОНСТРАЦИОННЫЙ УЧАСТОК КОДА. На оценку не влияет, исключительно для саморазвития.
 
 // Предлагаю "поиграться" с частями кода ниже, чтобы познакомиться с JS
 // Получаем элемент и меняем его класс, который определеён в библиотеке стилей materialize
-const password = document.getElementById('password');
-password.classList.add("valid")
-password.classList.remove("valid")
+
+//const password = document.getElementById('password');
+//password.classList.add("valid")
+//password.classList.remove("valid")
 
 // В браузере можно посмотреть, что из себя представляет документ
 // (CTRL+SHIFT+i для открытия консоли и открыть вкладку "консоль", туда будет залогированно значение)
@@ -34,6 +35,7 @@ console.log(document)
 const first_name_id = 'first_name'
 const last_name_id = 'last_name'
 const password_id = 'password'
+const repeat_password_id= 'password-repeat'
 const email_id = 'email'
 
 const sign_in_link_id = 'sign_in_link'
@@ -54,6 +56,42 @@ first_name.oninput = (e) => setFormValue(first_name_id, e.target.value)  // Ус
 const email = document.getElementById(email_id);
 email.oninput = (e) => setFormValue(email_id, e.target.value, validateEmail) // Установить значение с валидацией
 
+const validation_indicator = (field, field_status)=>{
+  if(String(field.value).length==0){
+    field.classList.remove("invalid")
+    field.classList.remove("valid")
+    return
+  }
+    
+  if(field_status){
+    field.classList.remove("invalid")
+    field.classList.add("valid")
+  }
+  else{
+    field.classList.remove("valid")
+    field.classList.add("invalid")
+  }
+}
+
+const password = document.getElementById(password_id);
+password.oninput = (e) => {
+  const status=setFormValue(password_id, e.target.value, validatePassword)
+  validation_indicator(password,status)
+  validation_indicator(repeated_password,validateRepeatedPassword(repeated_password.value))
+}
+
+const repeated_password = document.getElementById(repeat_password_id);
+repeated_password.oninput = (e) => {
+  const status=setFormValue(repeat_password_id,e.target.value, validateRepeatedPassword)
+  if(status){
+    repeated_password.classList.remove("invalid")
+    repeated_password.classList.add("valid")
+  }
+  else{
+    repeated_password.classList.remove("valid")
+    repeated_password.classList.add("invalid")
+  }
+}
 
 
 // Меняем стили объекта DOM дерева. Это позволяет скрыть форму регистрации и показать форму авторизации
