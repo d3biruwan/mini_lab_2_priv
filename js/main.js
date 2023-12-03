@@ -1,4 +1,4 @@
-import {setFormValue, submitSignUpForm, validateEmail, validatePassword, validateRepeatedPassword} from "./utils.js"
+import {clearForms, getValidationStatus, initSignInForm, initSignUpForm, setFormValue, submitForm, validateEmail, validatePassword, validateRepeatedPassword} from "./utils.js"
 
 
 ////// ДЕМОНСТРАЦИОННЫЙ УЧАСТОК КОДА. На оценку не влияет, исключительно для саморазвития.
@@ -37,13 +37,19 @@ const last_name_id = 'last_name'
 const password_id = 'password'
 const repeat_password_id= 'password-repeat'
 const email_id = 'email'
+const sign_in_email_id='sign_in_email'
 
 const sign_in_link_id = 'sign_in_link'
 const sign_up_form_id = 'sign_up_form'
 // const sign_in_form_id = 'sign_in_form'  // Пригодится
 const sign_up_btn_id = 'sign_up_btn'
+const sign_in_btn_id= 'sign_in_btn'
 const sign_in_form_id = 'sign_in_form'
+const sign_up_link_id = 'sign_up_link'
+const sign_in_password_id='sign_in_password'
 
+let btn=document.getElementById(sign_up_btn_id);
+initSignUpForm();
 
 // Получаем элемент DOM-дерева по id и присваиваем значение аттрибуту oninput
 // oninput вызывается с параметром "event" каждый раз, когда ввод меняется
@@ -51,10 +57,25 @@ const sign_in_form_id = 'sign_in_form'
 // Гуглить по тегам "события JS", "onchange/oninput HTML", "стрелочные функции JS", ...
 
 const first_name = document.getElementById(first_name_id);
+const last_name=document.getElementById(last_name_id);
 first_name.oninput = (e) => setFormValue(first_name_id, e.target.value)  // Установить значение без валидации
+last_name.oninput = (e) => setFormValue(last_name_id, e.target.value) 
 
 const email = document.getElementById(email_id);
-email.oninput = (e) => setFormValue(email_id, e.target.value, validateEmail) // Установить значение с валидацией
+email.oninput = (e) => {
+  const status = setFormValue(email_id, e.target.value, validateEmail) // Установить значение с валидацией
+  validation_indicator(email,status)
+  const form_validity=getValidationStatus();
+  button_validation(form_validity);
+} 
+
+const sign_in_email= document.getElementById(sign_in_email_id);
+sign_in_email.oninput= (e) => {
+  const status = setFormValue(sign_in_email_id, e.target.value, validateEmail) // Установить значение с валидацией
+  validation_indicator(sign_in_email,status)
+  const form_validity=getValidationStatus();
+  button_validation(form_validity);
+}
 
 const validation_indicator = (field, field_status)=>{
   if(String(field.value).length==0){
@@ -73,33 +94,65 @@ const validation_indicator = (field, field_status)=>{
   }
 }
 
+
+//const sign_up_btn=document.getElementById(sign_up_btn_id)
+const button_validation= (state)=>{
+  if(state){
+    btn.disabled=false;
+  }
+  else{
+    btn.disabled=true;
+  }
+
+}
+
 const password = document.getElementById(password_id);
 password.oninput = (e) => {
   const status=setFormValue(password_id, e.target.value, validatePassword)
   validation_indicator(password,status)
   validation_indicator(repeated_password,validateRepeatedPassword(repeated_password.value))
+  const form_validity=getValidationStatus();
+  button_validation(form_validity);
 }
 
 const repeated_password = document.getElementById(repeat_password_id);
 repeated_password.oninput = (e) => {
   const status=setFormValue(repeat_password_id,e.target.value, validateRepeatedPassword)
-  if(status){
-    repeated_password.classList.remove("invalid")
-    repeated_password.classList.add("valid")
-  }
-  else{
-    repeated_password.classList.remove("valid")
-    repeated_password.classList.add("invalid")
-  }
+  validation_indicator(repeated_password,status)
+  const form_validity=getValidationStatus();
+  button_validation(form_validity);
 }
 
+const sign_in_password = document.getElementById(sign_in_password_id);
+sign_in_password.oninput = (e) => {
+  const status=setFormValue(sign_in_password_id,e.target.value, validatePassword)
+  validation_indicator(sign_in_password,status)
+  const form_validity=getValidationStatus();
+  button_validation(form_validity);
+}
 
 // Меняем стили объекта DOM дерева. Это позволяет скрыть форму регистрации и показать форму авторизации
 // Объект формы не исключается из DOM дерева, а просто становистя невидимым
+
+
+
+
 const switch_to_sign_in = document.getElementById(sign_in_link_id);
 switch_to_sign_in.onclick = (e) => {
+  btn=document.getElementById(sign_in_btn_id);
+  clearForms()
+  initSignInForm()
   document.getElementById(sign_up_form_id).style.display = "none"
   document.getElementById(sign_in_form_id).style.display = ""
+}
+
+const switch_to_sign_up = document.getElementById(sign_up_link_id);
+switch_to_sign_up.onclick = (e) => {
+  btn=document.getElementById(sign_up_btn_id);
+  clearForms()
+  initSignUpForm()
+  document.getElementById(sign_up_form_id).style.display = ""
+  document.getElementById(sign_in_form_id).style.display = "none"
 }
 
 
@@ -107,7 +160,19 @@ const sign_up_btn = document.getElementById(sign_up_btn_id);
 sign_up_btn.onclick = (e) => {
   // При нажатии кнопки в форме по умолчанию происходит перезагрузка страницы.
   // Чтобы отключить его, нужно отменить стандартное поведение события
+
   e.preventDefault()
-  submitSignUpForm()
+  submitForm()
+  alert("(-__-)")
+}
+
+const sign_in_btn = document.getElementById(sign_in_btn_id);
+sign_in_btn.onclick = (e) => {
+  // При нажатии кнопки в форме по умолчанию происходит перезагрузка страницы.
+  // Чтобы отключить его, нужно отменить стандартное поведение события
+
+  e.preventDefault()
+  submitForm()
+  alert("(-__-)")
 }
 
