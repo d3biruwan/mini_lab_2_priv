@@ -1,5 +1,5 @@
 import {clearForms, getValidationStatus, initSignInForm, initSignUpForm, setFormValue, submitForm, validateEmail, validatePassword, validateRepeatedPassword} from "./utils.js"
-
+//Отсрочка
 
 ////// ДЕМОНСТРАЦИОННЫЙ УЧАСТОК КОДА. На оценку не влияет, исключительно для саморазвития.
 
